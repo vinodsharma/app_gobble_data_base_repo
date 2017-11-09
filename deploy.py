@@ -421,7 +421,7 @@ def main():
     deploy_settings = get_deploy_settings()
     docker_image = deploy_settings["DOCKER_IMAGE"]
     aws_account_id = boto3.client('sts').get_caller_identity().get('Account')
-    schedule_expression = "cron(0 8 ? * * *)"
+    schedule_expression = "cron(0 14 ? * * *)"
 
     create_update_aws_batch_resources(
         aws_account_id, compute_env_name, job_queue_name, job_definition_name,
