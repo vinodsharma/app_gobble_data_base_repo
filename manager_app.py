@@ -1,5 +1,4 @@
 import pika
-import sys
 
 url = "amqp://ulclrorr:a-HMtnXgFep9mK-x03rr-982kPRuqKCz@hornet.rmq.cloudamqp.com/ulclrorr"
 url_with_timeout = url + "?socket_timeout=10"
