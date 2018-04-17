@@ -51,6 +51,7 @@ jobs:
           name: Deploying to staging if tests pass and branch is not master
           command: |
             if [ "${CIRCLE_BRANCH}" != "master" ]; then
+              export HEROKU_APP_NAME='app-gobble-data-base-repo'
               heroku git:remote -a $HEROKU_APP_NAME
               git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/heads/master
               sleep 5
