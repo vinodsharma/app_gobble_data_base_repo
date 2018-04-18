@@ -51,6 +51,12 @@ jobs:
           name: Deploying to staging if tests pass and branch is not master
           command: |
             if [ "${CIRCLE_BRANCH}" != "master" ]; then
+              source $VENV_DIR/bin/activate;
+              export LOGDNA_APP=$CIRCLE_PROJECT_REPONAME'-staging'
+              export BUGSNAG_RELEASE_STAGE=staging
+              aws configure set default.region us-east-1
+              aws configure set default.output json
+              python deploy.py -r $CIRCLE_PROJECT_REPONAME -s $SHELL_SCRIPT_TO_RUN_APP
 
               export HEROKU_APP_NAME=`echo "${CIRCLE_PROJECT_REPONAME//_/-}-s"`
               heroku git:remote -a $HEROKU_APP_NAME
@@ -61,18 +67,19 @@ jobs:
               # heroku ps:scale worker=1
               heroku logs
 
-              source $VENV_DIR/bin/activate;
-              export LOGDNA_APP=$CIRCLE_PROJECT_REPONAME'-staging'
-              export BUGSNAG_RELEASE_STAGE=staging
-              aws configure set default.region us-east-1
-              aws configure set default.output json
-              python deploy.py -r $CIRCLE_PROJECT_REPONAME -s $SHELL_SCRIPT_TO_RUN_APP
             fi
 
       - deploy:
           name: Deploying to Prod if tests pass and branch is Master
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              source $VENV_DIR/bin/activate;
+              export LOGDNA_APP=$CIRCLE_PROJECT_REPONAME'-production'
+              export BUGSNAG_RELEASE_STAGE=production
+              aws configure set default.region us-west-2
+              aws configure set default.output json
+              python deploy.py -r $CIRCLE_PROJECT_REPONAME -s $SHELL_SCRIPT_TO_RUN_APP
+
               export HEROKU_APP_NAME=`echo "${CIRCLE_PROJECT_REPONAME//_/-}"`
               heroku git:remote -a $HEROKU_APP_NAME
               heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE
@@ -82,10 +89,4 @@ jobs:
               # heroku ps:scale worker=1
               heroku logs
 
-              source $VENV_DIR/bin/activate;
-              export LOGDNA_APP=$CIRCLE_PROJECT_REPONAME'-production'
-              export BUGSNAG_RELEASE_STAGE=production
-              aws configure set default.region us-west-2
-              aws configure set default.output json
-              python deploy.py -r $CIRCLE_PROJECT_REPONAME -s $SHELL_SCRIPT_TO_RUN_APP
             fi
