@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: gobble/python:3.6
-      - image: rabbitmq:3.7.4
-        name: rabbitmq-service
 
     steps:
 
@@ -36,6 +34,7 @@ jobs:
       - run:
           name: Running Consumer and Producer
           command: |
+            docker run -d --name rabbitmq-service rabbitmq:3.7.4
             docker run --network container:rabbitmq-service \
             -dt $DOCKER_IMAGE /bin/bash -c \
               'source $VENV_DIR/bin/activate;python manager_app.py'
