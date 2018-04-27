@@ -63,10 +63,10 @@ def start_aws_batch_job():
                 job_queue_name, env_variables)
     print("Job Submit Ended")
 
-start_aws_batch_job()
 
 def callback(ch, method, properties, body):
     print("Received %r:%r" % (method.routing_key, body))
+    # start_aws_batch_job()
 
 channel.basic_consume(callback,
                       queue=queue,
