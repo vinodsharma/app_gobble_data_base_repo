@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: gobble/python:3.6
-      - image: rabbitmq:3.7.4
+      # - image: rabbitmq:3.7.4
 
     steps:
 

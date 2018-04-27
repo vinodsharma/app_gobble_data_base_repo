@@ -6,6 +6,7 @@ import logging
 import sys
 
 url = "amqp://ulclrorr:a-HMtnXgFep9mK-x03rr-982kPRuqKCz@hornet.rmq.cloudamqp.com/ulclrorr"
+url = "amqp://127.0.0.1"
 url_with_timeout = url + "?socket_timeout=10"
 connection = pika.BlockingConnection(pika.URLParameters(url_with_timeout))
 channel = connection.channel()
