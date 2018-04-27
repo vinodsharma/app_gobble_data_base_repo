@@ -41,7 +41,7 @@ jobs:
               'source $VENV_DIR/bin/activate;python manager_app.py'
             docker run --network container:rabbitmq-service \
             -t $DOCKER_IMAGE /bin/bash -c \
-              'source $VENV_DIR/bin/activate;python producer_app.py'
+              'source $VENV_DIR/bin/activate;python producer_app.py gobble.regionalmenu.approved'
             for i in $(docker ps -a -q); do docker logs "$i"; done;
 
       - run:
