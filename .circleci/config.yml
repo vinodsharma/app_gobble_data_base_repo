@@ -35,12 +35,13 @@ jobs:
           name: Running Consumer and Producer
           command: |
             docker run -d --name rabbitmq-service rabbitmq:3.7.4
+            sleep 30
             docker run --network container:rabbitmq-service \
             -dt $DOCKER_IMAGE /bin/bash -c \
               'source $VENV_DIR/bin/activate;python manager_app.py'
             docker run --network container:rabbitmq-service \
             -t $DOCKER_IMAGE /bin/bash -c \
-              'source $VENV_DIR/bin/activate;python producer_app.py gobble.regionalmenu.approved'
+              'source $VENV_DIR/bin/activate;python producer_app.py gobble.regionalmenu.approved hello'
             for i in $(docker ps -a -q); do docker logs "$i"; done;
 
       - run:
