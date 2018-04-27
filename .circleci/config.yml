@@ -3,7 +3,8 @@ jobs:
   build:
     docker:
       - image: gobble/python:3.6
-      # - image: rabbitmq:3.7.4
+      - image: rabbitmq:3.7.4
+        name: rabbitmq-service
 
     steps:
 
@@ -31,6 +32,17 @@ jobs:
             -it $DOCKER_IMAGE /bin/bash -c \
               'source $VENV_DIR/bin/activate; \
               pytest tests/test_*.py'
+
+      - run:
+          name: Running Consumer and Producer
+          command: |
+            docker run --network container:rabbitmq-service \
+            -dt $DOCKER_IMAGE /bin/bash -c \
+              'source $VENV_DIR/bin/activate;python manager_app.py'
+            docker run --network container:rabbitmq-service \
+            -t $DOCKER_IMAGE /bin/bash -c \
+              'source $VENV_DIR/bin/activate;python producer_app.py'
+            for i in $(docker ps -a -q); do docker logs "$i"; done;
 
       - run:
           name: Push Docker Image to Docker Hub
