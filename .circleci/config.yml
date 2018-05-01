@@ -72,13 +72,14 @@ jobs:
               python deploy.py -r $CIRCLE_PROJECT_REPONAME -s $SHELL_SCRIPT_TO_RUN_APP
 
               export HEROKU_APP_NAME=`echo "${CIRCLE_PROJECT_REPONAME//_/-}-s"`
-              # heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE -a $HEROKU_APP_NAME
-              # git remote add staging https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
-              # git push staging master
-              heroku git:remote -a $HEROKU_APP_NAME -r staging
-              heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE
-              # git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+              heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE -a $HEROKU_APP_NAME
+              git remote add staging https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
               git push staging master
+              # heroku git:remote -a $HEROKU_APP_NAME -r staging
+              # heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE
+              # git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+              ## heroku git:remote -a $HEROKU_APP_NAME -r staging
+              # # git push staging master
               # heroku restart
               # heroku ps:scale worker=1
               sleep 5
