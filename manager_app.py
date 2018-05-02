@@ -6,6 +6,7 @@ import logging
 import sys
 
 url = "amqp://ulclrorr:a-HMtnXgFep9mK-x03rr-982kPRuqKCz@hornet.rmq.cloudamqp.com/ulclrorr"
+url = "amqp://127.0.0.1"
 url_with_timeout = url + "?socket_timeout=10"
 connection = pika.BlockingConnection(pika.URLParameters(url_with_timeout))
 channel = connection.channel()
@@ -62,10 +63,10 @@ def start_aws_batch_job():
                 job_queue_name, env_variables)
     print("Job Submit Ended")
 
-start_aws_batch_job()
 
 def callback(ch, method, properties, body):
     print("Received %r:%r" % (method.routing_key, body))
+    # start_aws_batch_job()
 
 channel.basic_consume(callback,
                       queue=queue,

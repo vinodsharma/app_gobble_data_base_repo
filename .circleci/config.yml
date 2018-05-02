@@ -32,6 +32,19 @@ jobs:
               pytest tests/test_*.py'
 
       - run:
+          name: Running Consumer and Producer
+          command: |
+            docker run -d --name rabbitmq-service rabbitmq:3.7.4
+            sleep 30
+            docker run --network container:rabbitmq-service \
+            -dt $DOCKER_IMAGE /bin/bash -c \
+              'source $VENV_DIR/bin/activate;python manager_app.py'
+            docker run --network container:rabbitmq-service \
+            -t $DOCKER_IMAGE /bin/bash -c \
+              'source $VENV_DIR/bin/activate;python producer_app.py gobble.regionalmenu.approved hello'
+            for i in $(docker ps -a -q); do docker logs "$i"; done;
+
+      - run:
           name: Push Docker Image to Docker Hub
           command: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -61,11 +74,13 @@ jobs:
               export HEROKU_APP_NAME=`echo "${CIRCLE_PROJECT_REPONAME//_/-}-s"`
               heroku git:remote -a $HEROKU_APP_NAME
               heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE
-              git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git ${CIRCLE_BRANCH}:master
-              sleep 5
+              git remote add staging https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
+              git push staging master
+              # git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
               # heroku restart
               # heroku ps:scale worker=1
-              heroku logs
+              # sleep 5
+              # heroku logs
 
             fi
 
@@ -83,10 +98,12 @@ jobs:
               export HEROKU_APP_NAME=`echo "${CIRCLE_PROJECT_REPONAME//_/-}-p"`
               heroku git:remote -a $HEROKU_APP_NAME
               heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE
-              git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git ${CIRCLE_BRANCH}:master
-              sleep 5
+              git remote add production https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
+              git push production master
+              # git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git ${CIRCLE_BRANCH}:master
               # heroku restart
               # heroku ps:scale worker=1
-              heroku logs
+              # sleep 5
+              # heroku logs
 
             fi
