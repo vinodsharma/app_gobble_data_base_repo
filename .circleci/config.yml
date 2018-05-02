@@ -8,6 +8,10 @@ jobs:
 
       - checkout
 
+      - add_ssh_keys:
+          fingerprints:
+            - "92:a6:0c:18:48:8c:50:23:78:17:95:33:05:99:08:d8"
+
       - setup_remote_docker
 
       - run:
@@ -73,7 +77,6 @@ jobs:
 
               export HEROKU_APP_NAME=`echo "${CIRCLE_PROJECT_REPONAME//_/-}-s"`
               # heroku git:remote -a $HEROKU_APP_NAME
-              heroku keys:add
               heroku git:remote -a $HEROKU_APP_NAME -r staging
               # git remote add herkou https://git.heroku.com/$HEROKU_APP_NAME.git
               heroku config:set DOCKER_IMAGE=$DOCKER_IMAGE
