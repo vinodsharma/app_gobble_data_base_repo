@@ -39,7 +39,7 @@ def submit_job(batch_client, job_definition_name, job_name,
         jobName=job_name,
         jobQueue=job_queue_name,
         containerOverrides={
-            'command': ['run_app.sh '+str(arg),],
+            'command': ['sh','run_app.sh', str(arg)],
             'environment': env_variables,
         },
     )
