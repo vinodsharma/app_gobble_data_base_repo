@@ -1,2 +1,2 @@
 source $VENV_DIR/bin/activate;
-python app.py
+python app.py -a $1

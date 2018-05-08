@@ -33,11 +33,13 @@ def get_deploy_settings():
 
 def submit_job(batch_client, job_definition_name, job_name,
                 job_queue_name, env_variables):
+    arg = 123
     response = batch_client.submit_job(
         jobDefinition=job_definition_name,
         jobName=job_name,
         jobQueue=job_queue_name,
         containerOverrides={
+            'command': ['run_app.sh '+str(arg),],
             'environment': env_variables,
         },
     )
@@ -73,5 +75,6 @@ channel.basic_consume(callback,
                       no_ack=True)
 
 
-print('Waiting for Messages. To exit press CTRL+C')
-channel.start_consuming()
+start_aws_batch_job()
+# print('Waiting for Messages. To exit press CTRL+C')
+# channel.start_consuming()

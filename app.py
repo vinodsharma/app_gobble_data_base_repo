@@ -1,10 +1,19 @@
 from src.app_utils.logging_utils import logger
 import src.app_utils.logging_utils as logging_utils
 import src.app_utils.settings as settings
+import argparse
 
 
 def main():
     logger.info("Application Started")
+    parser = argparse.ArgumentParser(
+        description='Create Meal Recommendations for customers served '+\
+                'by a regional menu')
+    parser.add_argument(
+        '-a', '--arg', type=int, required=True,
+        help='regional_menu_id for which to create meal assignments')
+    args = parser.parse_args()
+    logger.info("Parameter a value %d" % (args.arg))
     logger.info("Application Ended")
 
 
